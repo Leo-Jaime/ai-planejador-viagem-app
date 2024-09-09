@@ -1,9 +1,13 @@
-import { View, Text, Image, StyleSheet } from 'react-native'
+import { View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native'
 import React from 'react'
 import { Colors } from '@/constants/Colors'
+import { useRouter } from 'expo-router'
+
 
 
 export default function Login() {
+
+  const router=useRouter();
   return (
     <View>
       <Image source={require('./../assets/images/login.jpg')} 
@@ -32,14 +36,16 @@ export default function Login() {
           color: Colors.GRAY,
         }}>Descubra sua próxima aventura sem esforço. Itinerários personalizados ao seu alcance. Viaje de maneira mais inteligente com insights orientados por IA</Text>
 
-        <View style={styles.button}>
+        <TouchableOpacity style={styles.button}
+          onPress={() => router.push('auth/sign-in')}
+        >
           <Text style={{
             fontFamily: 'outfit-bold',
             color: Colors.WHITE,
             textAlign: 'center',
             fontSize: 18,
           }}>Comece Agora</Text>
-        </View>
+        </TouchableOpacity>
 
       </View>
 
