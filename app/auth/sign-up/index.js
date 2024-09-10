@@ -1,18 +1,51 @@
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React, { useEffect } from 'react'
+import { StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { useNavigation, useRouter } from 'expo-router'
 import { Colors } from './../../../constants/Colors'
 import Ionicons from '@expo/vector-icons/Ionicons';
+import  { auth} from './../../../configs/FirebaseConfig';
+import { createUserWithEmailAndPassword } from 'firebase/auth/cordova';
 
 export default function SignUp() {
   const navigation=useNavigation();
   const router=useRouter();
 
+  const [email,setEmail]=useState();
+  const [senha,setSenha]=useState();
+  const [nomeCompleto,setNomeCompleto]=useState();
+
   useEffect(() =>{
     navigation.setOptions({
       headerShown: false,
     })
-  })
+  },[]);
+  const OnCreateAccount=()=>{
+
+    if(!email&&!senha&&!nomeCompleto)
+    {
+      ToastAndroid.show("Preencha todos os campos",ToastAndroid.BOTTOM);
+      return;
+    }
+  
+    // Funacao para criar usuarios
+  createUserWithEmailAndPassword(auth, email, senha)
+    .then((userCredential) => {
+      // Signed in 
+      const user = userCredential.user;
+      console.log(user);
+      // quando a conta for criada o usuario ira ser redicionado para a tela de login, pode ser melhorado dando a opcao dele clicar no botao login.
+      router.replace('auth/sign-in')
+      // ...
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      // console.log("--",errorMessage, errorCode);
+      // ..
+    })
+  };
+
+
   return (
     <View
     style={{
@@ -39,8 +72,10 @@ export default function SignUp() {
           fontFamily: 'outfit',
         }}>Nome completo</Text>
         <TextInput 
-        style={styles.input}
-        placeholder='Digite seu nome completo'></TextInput>
+          style={styles.input}
+          placeholder='Digite seu nome completo'
+          onChangeText={(value)=>setNomeCompleto(value)}
+        />
       </View>
 
       {/* Email */}
@@ -51,8 +86,10 @@ export default function SignUp() {
           fontFamily: 'outfit',
         }}>Email</Text>
         <TextInput 
-        style={styles.input}
-        placeholder='Digite Seu Email'></TextInput>
+          style={styles.input}
+          placeholder='Digite Seu Email'
+          onChangeText={(value)=>setEmail(value)}
+        />
       </View>
       {/* Senha */}
       <View style={{
@@ -62,13 +99,15 @@ export default function SignUp() {
           fontFamily: 'outfit',
         }}>crie sua senha</Text>
         <TextInput 
-        secureTextEntry={true}
-        style={styles.input}
-        placeholder='Digite Sua Senha'></TextInput>
+          secureTextEntry={true}
+          style={styles.input}
+          placeholder='Digite Sua Senha'
+          onChangeText={(value)=>setSenha(value)}
+        />
       </View>
       
       {/* Botao de criar conta */}
-      <View style={{
+      <TouchableOpacity onPress={OnCreateAccount} style={{
         padding:20,
         backgroundColor:Colors.PRIMARY,
         borderRadius:15,
@@ -79,7 +118,7 @@ export default function SignUp() {
           textAlign:'center'
         }}>Criar conta</Text>
 
-      </View>
+      </TouchableOpacity>
       {/* botao de fazer login  */}
       <TouchableOpacity 
         onPress={() => router.replace('auth/sign-in')}
