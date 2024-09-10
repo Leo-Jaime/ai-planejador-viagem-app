@@ -1,12 +1,17 @@
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useNavigation, useRouter } from 'expo-router'
 import { Colors } from './../../../constants/Colors'
 import Ionicons from '@expo/vector-icons/Ionicons';
+import  { auth} from './../../../configs/FirebaseConfig';
+import { signInWithEmailAndPassword } from 'firebase/auth/cordova';
 
 export default function SignIn() {
   const navigation=useNavigation();
   const router=useRouter();
+
+  const [email,setEmail]=useState();
+  const [senha,setSenha]=useState();
 
   useEffect(() => {
     navigation.setOptions({
@@ -14,6 +19,34 @@ export default function SignIn() {
     })
   }, [])
 
+  const onSignIn=()=>{
+
+    if(!email&&!senha)
+    {
+      ToastAndroid.show("Digite seu Email e senha!",ToastAndroid.BOTTOM);
+      return;
+    }
+
+    signInWithEmailAndPassword(auth, email, senha)
+      .then((userCredential) => {
+        // Signed in 
+        const user = userCredential.user;
+        console.log(user);
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorMessage);
+        if (errorCode === 'auth/invalid-credential') {
+          ToastAndroid.show("Credenciais inválidas!", ToastAndroid.LONG);
+        } else if (errorCode === 'auth/invalid-email') {
+          ToastAndroid.show("Formato de e-mail inválido!", ToastAndroid.LONG);
+        } else {
+          ToastAndroid.show("Ocorreu um erro durante o login. Tente novamente.", ToastAndroid.LONG);
+        }
+      });
+  }
 
   return (
     <View style={{
@@ -55,6 +88,7 @@ export default function SignIn() {
         }}>Email</Text>
         <TextInput 
         style={styles.input}
+        onChangeText={(value)=>setEmail(value)}
         placeholder='Digite Seu Email'></TextInput>
       </View>
       {/* Senha */}
@@ -67,10 +101,11 @@ export default function SignIn() {
         <TextInput 
         secureTextEntry={true}
         style={styles.input}
+        onChangeText={(value)=>setSenha(value)}
         placeholder='Digite Sua Senha'></TextInput>
       </View>
       {/* Botao de login */}
-      <View style={{
+      <TouchableOpacity onPress={onSignIn} style={{
         padding:20,
         backgroundColor:Colors.PRIMARY,
         borderRadius:15,
@@ -81,7 +116,8 @@ export default function SignIn() {
           textAlign:'center'
         }}>Entrar</Text>
 
-      </View>
+      </TouchableOpacity>
+
       {/* Botao de criar conta */}
       <TouchableOpacity 
         onPress={() => router.replace('auth/sign-up')}
