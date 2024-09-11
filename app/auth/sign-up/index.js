@@ -33,8 +33,7 @@ export default function SignUp() {
       // Signed in 
       const user = userCredential.user;
       console.log(user);
-      // quando a conta for criada o usuario ira ser redicionado para a tela de login, pode ser melhorado dando a opcao dele clicar no botao login.
-      router.replace('auth/sign-in')
+      router.replace('/mytrip')
       // ...
     })
     .catch((error) => {
