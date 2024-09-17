@@ -1,9 +1,10 @@
 import { View, Text, ToastAndroid } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
-import { useNavigation } from 'expo-router'
+import { useNavigation, useRouter } from 'expo-router'
 import {Colors} from './../../constants/Colors'
 import CalendarPicker from "react-native-calendar-picker";
 import { TouchableOpacity } from 'react-native';
+import {CreateTripContext} from "./../../context/CreateTripContext";
 import moment from 'moment';
 export default function selectDates() {
     
@@ -11,6 +12,7 @@ export default function selectDates() {
     const[startDate,setStartDate]=useState();
     const[endDate,setEndDate]=useState();
     const {tripData,setTripData} = useContext(CreateTripContext);
+    const router=useRouter();
     useEffect(()=>{
         navigation.setOptions({
             headerShown:true,
@@ -44,6 +46,7 @@ export default function selectDates() {
             totalNoOfDays:totalNoOfDays+1,
         });
 
+        router.push('/create-trip/select-budget');
 
     };
 
@@ -59,6 +62,7 @@ export default function selectDates() {
         fontSize:35,
         marginTop:20,
       }}>Datas de viagens</Text>
+      {/* Calendario  */}
         <View style={{
             marginTop:30,
         }}>
@@ -92,6 +96,7 @@ export default function selectDates() {
       selectedDayTextStyle={{color:Colors.WHITE}}
         onDateChange={onDateChange} />
         </View>
+        {/* botao continue */}
         <TouchableOpacity 
         onPress={OnDateSelectionContinue}
             style={{

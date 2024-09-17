@@ -8,7 +8,7 @@ import { TouchableOpacity } from 'react-native'
 import { CreateTripContext } from '@/context/CreateTripContext'
 import { useRouter } from 'expo-router'
 export default function SelectTraveler() {
-    const [selectedTravelers, setSelectedTravelers] = useState('')
+    const [selectedTraveler, setSelectedTraveler] = useState('')
     const {tripData,setTripData} = useContext(CreateTripContext);
     const router = useRouter();
 
@@ -22,11 +22,10 @@ export default function SelectTraveler() {
     }
     , [])
     useEffect(()=>{
-        setTripData({
-            ...tripData,
-            traveler: selectedTravelers
+        setTripData({...tripData,
+            travelerCount: selectedTraveler
         })
-    },[selectedTravelers])
+    },[selectedTraveler])
     useEffect(() => {
         console.log(tripData)
     }, [tripData])
@@ -43,13 +42,13 @@ export default function SelectTraveler() {
         style={{
           fontSize: 35,
           fontFamily:'outfit-bold',
-          marginTop:20,
+          marginTop:-20,
         }}
       >Quem está viajando</Text>
 
       <View
         style={{
-          marginTop: 20,
+          marginTop: 10,
         }}
       >
         <Text
@@ -57,36 +56,35 @@ export default function SelectTraveler() {
             fontSize: 23,
             fontFamily:'outfit-bold',
           }}
-        >Escolha o tipo de viagen</Text>
+        >Escolha o tipo de viagem</Text>
         <FlatList 
           data={SelectTravelerList}
           renderItem={({item,index})=>(
             <TouchableOpacity
-              onPress={()=>setSelectedTravelers(item)}
+              onPress={()=>setSelectedTraveler(item)}
               style={{
                 marginVertical:10,
               }}
             >
-              <OptionCard option={item} selectedOption={selectedTravelers}/>
+              <OptionCard option={item} selectedOption={selectedTraveler}/>
             </TouchableOpacity>
           )}
         />
         <TouchableOpacity
           onPress={()=>router.push('/create-trip/select-dates')}
           style={{
-            padding: 20,
-            backgroundColor: Colors.Black,
-            borderRadius: 99,
+            padding: 15,
+            backgroundColor: Colors.PRIMARY,
+            borderRadius: 30,
             marginTop: 20,
-            paddingHorizontal: 50,
-            display: 'flex',
+            paddingHorizontal: 45,
             alignItems: 'center',
           }}
         >
           <Text
             style={{
-              color: Colors.White,
-              fontSize: 18,
+              color: Colors.WHITE,
+              fontSize: 20,
               fontFamily: 'outfit-bold',
             }}
           >Continue</Text>

@@ -1,11 +1,11 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 import { Colors } from './../../constants/Colors'
-export default function OptionCard({option}) {
+export default function OptionCard({option, selectedOption}) {
   return (
-    <View style={{
-        padding: 30,
-        backgroundColor: Colors.LIGHT_GRAY,
+    <View style={[{
+        padding: 25,
+        backgroundColor:Colors.LIGHT_GRAY,
         borderRadius: 15,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
@@ -16,7 +16,7 @@ export default function OptionCard({option}) {
         flexDirection: 'row',
         justifyContent: 'space-between',
     
-    }}>
+    },selectedOption?.id==option?.id&&{borderWidth:3}]}>
       <View>
         {/* titulo */}
       <Text
@@ -28,17 +28,18 @@ export default function OptionCard({option}) {
         {/* descricao */}
         <Text
             style={{
-                fontSize: 17,
+                fontSize: 15,
                 fontFamily:'outfit',
-                color: Colors.Gray,
+                color: Colors.GRAY,
             }}
         >
-            {option?.description}
+            {option?.desc}
         </Text>
         </View>
         {/* icone */}
         <Text style={{
-            fontSize: 30,
+            marginTop:15,
+            fontSize: 25,
         }}>{option?.icon}</Text>
     </View>
   )
