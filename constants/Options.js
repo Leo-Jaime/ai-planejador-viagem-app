@@ -49,3 +49,6 @@ export const selectBudget=[
         icon: '💸'
     }
 ]
+
+
+export const AI_PROMPT='Gerar plano de viagem para local em Formato JSON: {location}, por {totalDays} dia e {totalNight} noite para {traveler} com orçamento de {budget} com detalhes do voo, preço do voo com URL de reserva, lista de opções de hotéis com nome do hotel, endereço do hotel, preço, URL da imagem do hotel, coordenadas geográficas , classificação, descrições e locais para visitar nas proximidades com nome do local, detalhes do local, URL da imagem do local, coordenadas geográficas, preços dos ingressos, viagem no tempo em cada local por {totalDays} dia e {totalNight} noite com plano de cada dia com melhor horário para visitar no formato JSON.'
