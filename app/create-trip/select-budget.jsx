@@ -70,7 +70,8 @@ export default function SelectBudget() {
             </TouchableOpacity>
           )}
         />
-                <TouchableOpacity
+        {/* botao continue */}
+        <TouchableOpacity
           onPress={onSelectedBudget}
           style={{
             padding: 15,

@@ -5,16 +5,19 @@ import { CreateTripContext } from '../../context/CreateTripContext';
 import { AI_PROMPT } from '../../constants/Options';
 import { chatSession } from '../../configs/AiModal';
 import { useRouter } from 'expo-router';
-
+import {auth, db} from './../../configs/FirebaseConfig';
+import { doc, setDoc } from 'firebase/firestore';
 
 export default function GenerateTrip() {
 
   const {tripData,setTripData}=useContext(CreateTripContext);
   const [loading,setLoading]=useState(false);
   const router=useRouter();
+  const user=auth.currentUser;
+  
   useEffect(() => {
     tripData&&GenerateAirTrip()
-  },[tripData]);
+  },[]);
 
   const GenerateAirTrip=async()=>{
     setLoading(true);
@@ -26,15 +29,28 @@ export default function GenerateTrip() {
     .replace('{budget}',tripData?.budget?.title)
     .replace('{totalDays}',tripData?.totalNoOfDays)
     .replace('{totalNight}',tripData?.totalNoOfDays-1)
-
+    
     console.log(FINAL_PROMPT);
 
     // Verificar respota do gemini
-    // const result = await chatSession.sendMessage(FINAL_PROMPT);
-    // console.log(result.response.text());
+    const result = await chatSession.sendMessage(FINAL_PROMPT);
+    console.log(result.response.text());
     setLoading(false)
     
+     
+    const tripResp=JSON.parse(result.response.text());
+    const docId=(Date.now()).toString();
+    
+    const result_=await setDoc(doc(db, "UserTrips",docId), {
+      userEmail:user.email, 
+      tripPlan:tripResp, // resultados da IA
+      tripData:JSON.stringify(tripData), // dados de selecao do usuario
+      docId:docId
+    
+  });
     router.push('(tabs)/mytrip');
+
+  
   }
 
   return (
