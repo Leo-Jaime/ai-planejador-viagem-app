@@ -1,13 +1,53 @@
-import { View, Text, Image, ScrollView } from 'react-native'
+import { View, Text, Image, ScrollView, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { useLocalSearchParams, useNavigation } from 'expo-router'
+import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router'
 import { Colors } from './../../constants/Colors'
 import moment from 'moment'
 import FlightInfo from '../../components/TripDetails/Flightinfo'
 import HotelList from '../../components/TripDetails/HotelList'
 import PlannedTrips from '../../components/TripDetails/PlannedTrips'
+import { TouchableOpacity } from 'react-native'
+import { doc, deleteDoc } from 'firebase/firestore';
+import {auth, db} from './../../configs/FirebaseConfig';
 export default function TripDetails() {
-    console.log('=---==========================Tela TripDetails=---==========================')
+    const deleteUserTrip = async (tripId) => {
+        if (!tripId) {
+            console.error("ID da viagem não está definido.");
+            return;
+        }
+        try {
+            await deleteDoc(doc(db, 'UserTrips', tripId));
+            console.log("Viagem excluída com sucesso!");
+        } catch (error) {
+            console.error("Erro ao excluir a viagem: ", error);
+        }
+    };
+
+
+    const router=useRouter();
+    // console.log('=---==========================Tela TripDetails=---==========================')
+    const handleCancel = () => {
+        Alert.alert(
+            "Confirmar Cancelamento",
+            "Você tem certeza que deseja cancelar a viagem?",
+            [
+                {
+                    text: "Não",
+                    onPress: () => console.log("Cancelado"),
+                    style: "cancel"
+                },
+                {
+                    text: "Sim",
+                    onPress: () => {
+                        console.log("Viagem cancelada");
+                        const docID = tripDetails?.docId; // Obtenha o docId diretamente
+                        deleteUserTrip(docID); // Passa o docID para deletar a viagem
+                        router.push('(tabs)/mytrip');
+                    }
+                }
+            ]
+        );
+    };
 
 
 
@@ -36,7 +76,11 @@ export default function TripDetails() {
             // console.error('Invalid JSON format:', error);
         }
     }, [trip]);
-    // console.log(tripDetails?.tripPlan?.acomodacoes)
+    console.log(tripPlan?.roteiro)
+
+    const tripPlan = tripDetails?.tripPlan;
+    const tripData = formatData(tripDetails?.tripData);
+    const docID = formatData(tripDetails?.docId)
   return tripDetails&&(
         
     <ScrollView>
@@ -99,10 +143,29 @@ export default function TripDetails() {
         {/* Lista de hoteis  */}
         <HotelList hotelList={tripDetails?.tripPlan?.acomodacoes}/>
         {/* informações do planejador do dia da viagem */}
-        <PlannedTrips details={tripDetails?.triPlan?.roteiro}/>
+        <PlannedTrips details={tripPlan?.roteiro} />
+        <TouchableOpacity 
+            style={{
+                marginTop: 30,
+                marginBottom: 30,
+                backgroundColor: '#FF4C4C',
+                borderRadius: 10,
+                padding: 5
+            }}
+            onPress={handleCancel}
+        >
+            <Text style={{
+                fontFamily: 'outfit-bold',
+                fontSize: 20,
+                color: Colors.WHITE,
+                textAlign: 'center'
+            }}>
+                Cancelar Viagem
+            </Text>
+        </TouchableOpacity>
         </View>
 
-
+ 
     </ScrollView>
   )
 }
