@@ -35,7 +35,8 @@ const GetMyTrips=async()=>{
       padding:25,
       paddingTop:55,
       backgroundColor:Colors.WHITE,
-      height:'100%'
+      height:'100%',
+      
     }}>
       
      <View 

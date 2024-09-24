@@ -25,7 +25,8 @@ export default function UserTripList({userTrips}) {
   return (
     <View>
       <View style={{
-        marginTop:20
+        marginTop:20,
+        marginBottom:80
       }}>
         {latestTrip?.locationInfo?.photoRef?
         <Image source={{uri:'https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference='+latestTrip.locationInfo.photoRef+'&key='+process.env.EXPO_PUBLIC_GOOGLE_MAP_KEY}} 
@@ -72,7 +73,11 @@ export default function UserTripList({userTrips}) {
               }}
               >🚀 {latestTrip?.travelerCount.title}</Text>
             </View>
-            <TouchableOpacity style={{
+            <TouchableOpacity 
+            onPress={()=> router.push({pathname:'/trip-details',params:{
+              trip:JSON.stringify(userTrips[0])
+            }})}
+            style={{
               
               backgroundColor:Colors.PRIMARY,
               padding:15,

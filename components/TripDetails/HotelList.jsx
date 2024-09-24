@@ -2,16 +2,31 @@ import { View, Text, FlatList, Image } from 'react-native'
 import React from 'react'
 import { Colors} from './../../constants/Colors'
 export default function HotelList({hotelList}) {
-  const RepetirEmoji = ({ emoji, quantidade }) => {
-    return (
-      <Text>
-        {Array.from({ length: quantidade }).map((_, index) => (
-          <Text style={{fontSize:15}} key={index}>{emoji}</Text>
-        ))}
-      </Text>
-    );
-  };
 
+  const RepetirEmoji = ({ emoji, quantidade }) => {
+    const total = 5;
+    const faltando = total - quantidade;
+    emoji="★"
+    return (
+      <Text style={{
+        fontSize:20,
+        fontFamily:'outfit'
+      }}>
+        {quantidade}.0
+      {Array.from({ length: total }).map((_, index) => (
+        <Text
+          style={{
+            fontSize: 25, // Tamanho da estrela
+            color: index < quantidade ? "gold" : "gray" // "gold" para estrelas preenchidas, "gray" para as restantes
+          }}
+          key={index}
+        >
+          {emoji}
+        </Text>
+      ))}
+    </Text>
+  );
+};
 
   return (
     <View style={{
@@ -57,7 +72,7 @@ export default function HotelList({hotelList}) {
                     // flexDirection:'row',
                     // justifyContent: 'space-between'
                 }}>
-                  <RepetirEmoji emoji="⭐" quantidade={item.classificacao[0]} />
+                  <RepetirEmoji quantidade={item.classificacao[0]} />
                     {/* <Text style={{
                         fontFamily:'outfit'
                     }}>⭐{item.classificacao[0] }</Text> */}
