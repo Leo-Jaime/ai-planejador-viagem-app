@@ -96,6 +96,7 @@ export default function UserTripList({userTrips}) {
         {userTrips.map((trip, index) => (
            <UserTripCard key={index} trip={trip} />
         ))}
+        
       </View>
     </View>
   )

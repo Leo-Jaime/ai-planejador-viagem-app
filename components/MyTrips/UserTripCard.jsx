@@ -2,13 +2,19 @@ import { View, Text, Image } from 'react-native'
 import React from 'react'
 import moment from 'moment'
 import { Colors} from './../../constants/Colors'
+import { TouchableOpacity } from 'react-native'
+import { useRouter } from 'expo-router'
 export default function UserTripCard({trip}) {
+    const router=useRouter();
     const formatData=(data)=>{
         return JSON.parse(data)
 
     }
   return (
-<View
+<TouchableOpacity 
+    onPress={()=> router.push({pathname:'/trip-details',params:{
+    trip:JSON.stringify(trip)
+  }})}
         style={{
             marginTop: 20,
             display: 'flex',
@@ -53,6 +59,6 @@ export default function UserTripCard({trip}) {
                 }}
             >Vijantes: {formatData(trip.tripData).travelerCount.title}</Text>
         </View>
-    </View>
+    </TouchableOpacity>
   )
 }
